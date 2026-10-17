@@ -10,12 +10,19 @@ struct PrayerTimeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TodayView()
-                .environment(model)
-                .task { await model.requestNotificationsIfNeeded() }
-                .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in
-                    Task { await model.refreshAlerts() }
-                }
+            TabView {
+                TodayView()
+                    .tabItem { Label("Times", systemImage: "clock") }
+                QiblaView()
+                    .tabItem { Label("Qibla", systemImage: "location.north.circle") }
+            }
+            // NSAccentColorName alone doesn't reach the tab bar or Color.accentColor on iOS 26.
+            .tint(Color("AccentColor"))
+            .environment(model)
+            .task { await model.requestNotificationsIfNeeded() }
+            .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in
+                Task { await model.refreshAlerts() }
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             switch phase {

@@ -6,8 +6,8 @@ No ads, no accounts, no analytics, no paywall.
 
 **Status:** pre-alpha. The calculation core for both platforms is in place and
 tested. The iOS app has a Today screen, offline city search, approximate GPS,
-calculation settings and adhan notifications (system sound for now). The
-Android app isn't started.
+calculation settings, adhan notifications (system sound for now) and a Qibla
+compass. The Android app isn't started.
 
 ## Repository layout
 
@@ -85,6 +85,13 @@ How the app behaves:
 - **Notifications.** iOS keeps at most 64 pending notifications. The app refills
   them on launch, on returning to the foreground, on background refresh and on a
   time-zone change. The 64th slot tells the user to open the app.
+- **Qibla.** The compass reads the magnetometer's magnetic heading and converts
+  it to true north with the World Magnetic Model (WMM2025, bundled from NOAA,
+  valid to 2030) at the saved location. This works without location permission,
+  and the model is tested against NOAA's published test values. It shows
+  compass accuracy, a calibration and metal warning, and a haptic and VoiceOver
+  announcement when the phone faces the Qibla. In DEBUG builds,
+  `QIBLA_TEST_HEADING` pins the heading so UI tests can drive it on a simulator.
 
 Regenerating bundled assets:
 
@@ -92,6 +99,8 @@ Regenerating bundled assets:
 # City database (inputs from https://download.geonames.org/export/dump/)
 python3 tools/gen_cities.py cities15000.txt admin1CodesASCII.txt countryInfo.txt \
     > ios/PrayerTime/Resources/cities.tsv
+# Magnetic model: replace with the next WMM.COF from NOAA when WMM2025 expires (2030)
+#   https://www.ncei.noaa.gov/products/world-magnetic-model -> ios/PrayerTime/Resources/WMM2025.COF
 # App icon
 swift tools/make_icon.swift ios/PrayerTime/Assets.xcassets/AppIcon.appiconset/AppIcon.png
 ```
