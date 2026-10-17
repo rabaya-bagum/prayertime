@@ -6,8 +6,8 @@ No ads, no accounts, no analytics, no paywall.
 
 **Status:** pre-alpha. The calculation core and adhan schedulers for both
 platforms are in place and tested. The iOS app has a Today screen, offline
-city search, approximate GPS, calculation settings, adhan notifications (system
-sound until reciter clips are bundled) and a Qibla compass. The Android app UI
+city search, approximate GPS, calculation settings, adhan notifications with a
+bundled recording, and a Qibla compass. The Android app UI
 isn't started.
 
 ## Repository layout
@@ -17,6 +17,7 @@ isn't started.
 | `docs/SPEC.md` | Product spec, with revisions from building the core |
 | `docs/adr/` | Architecture decisions |
 | `docs/NOTIFICATIONS.md` | How adhans are scheduled on each platform, and what the apps must wire up |
+| `docs/AUDIO_LICENSES.md` | Source, author and license of each bundled adhan recording |
 | `android/core` | Kotlin calculation core and alert planners (plain JVM, no Android dependencies) |
 | `android/notifications` | Android alarms, receivers, channels and the adhan playback service |
 | `ios/PrayerCore` | Swift package: `PrayerCore` (same API as the Kotlin core) and `PrayerNotifications` |
@@ -91,8 +92,10 @@ How the app behaves:
   brings them up to date on launch, on returning to the foreground, on
   background refresh, on a time-zone change and after any edit, touching only
   alerts that changed. The 64th slot, a day before the window runs out, tells
-  the user to open the app. Adhans use the system sound until reciter clips
-  (`<sound>_clip.caf`) are bundled.
+  the user to open the app. An adhan notification plays the opening takbir
+  (iOS allows under 30 s). Opening it, or receiving it with the app open,
+  plays the full recording. Adhans are time-sensitive, so they can break
+  through Focus.
 - **Qibla.** The compass reads the magnetometer's magnetic heading and converts
   it to true north with the World Magnetic Model (WMM2025, bundled from NOAA,
   valid to 2030) at the saved location. This works without location permission,
@@ -125,3 +128,4 @@ credited on the app's About screen.
 ## License
 
 MIT. See `LICENSE`. Adhan and its test data are also MIT (`shared/testdata/adhan/LICENSE`).
+The bundled adhan recordings are CC BY-SA 4.0, not MIT; see `docs/AUDIO_LICENSES.md`.

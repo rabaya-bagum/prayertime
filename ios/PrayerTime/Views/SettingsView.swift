@@ -116,6 +116,19 @@ struct SettingsView: View {
             Picker("Reminder before", selection: reminderMinutes) {
                 ForEach(Self.reminderChoices, id: \.self) { Text($0 == 0 ? "None" : "\($0) min").tag($0) }
             }
+            let sound = AdhanSound.named(model.alerts.alert(for: .fajr).sound)
+            Button {
+                AdhanPlayer.shared.toggle(sound)
+            } label: {
+                LabeledContent {
+                    Image(systemName: AdhanPlayer.shared.playing == sound ? "stop.circle.fill" : "play.circle.fill")
+                        .font(.title2)
+                } label: {
+                    Text("Adhan voice")
+                    Text(sound.reciter)
+                }
+            }
+            .accessibilityLabel(AdhanPlayer.shared.playing == sound ? "Stop adhan preview" : "Play adhan preview")
         } header: {
             Text("Adhan alerts")
         } footer: {
