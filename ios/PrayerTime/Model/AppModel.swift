@@ -97,6 +97,7 @@ final class AppModel {
         notificationStatus = await NotificationAccess.status()
         let inputs = ScheduleInputs(place: location.place, settings: settings, notifications: alerts)
         let allowed = [UNAuthorizationStatus.authorized, .provisional, .ephemeral].contains(notificationStatus)
+        await NotificationAccess.removeLegacyAlerts()
         try? await NotificationScheduler(center: center).refresh(allowed ? inputs : nil)
         pendingAlertCount = await NotificationAccess.pendingCount()
     }
@@ -151,4 +152,17 @@ private enum NotificationAccess {
     static func pendingCount() async -> Int {
         await UNUserNotificationCenter.current().pendingNotificationRequests().count
     }
+
+    /// The scheduler only manages its own identifiers, so alerts left by the
+    /// app's earlier scheduler would otherwise fire alongside the new ones.
+    static func removeLegacyAlerts() async {
+        let center = UNUserNotificationCenter.current()
+        let legacy = await center.pendingNotificationRequests().map(\.identifier).filter(isLegacyAlert)
+        if !legacy.isEmpty { center.removePendingNotificationRequests(withIdentifiers: legacy) }
+    }
+}
+
+/// "adhan-fajr-1767225600": the earlier scheduler's "<kind>-<prayer>-<epoch seconds>" format.
+func isLegacyAlert(_ identifier: String) -> Bool {
+    identifier.range(of: #"^(adhan|reminder|keepalive)-[a-z]+-\d+$"#, options: .regularExpression) != nil
 }

@@ -56,4 +56,12 @@ final class AppModelTests: XCTestCase {
         XCTAssertNotNil(TimeZone(identifier: model.location.place.timeZoneId))
         XCTAssertFalse(model.location.isCurrentLocation)
     }
+
+    func testRecognizesTheEarlierSchedulersAlerts() {
+        XCTAssertTrue(isLegacyAlert("adhan-fajr-1767225600"))
+        XCTAssertTrue(isLegacyAlert("reminder-isha-1767225600"))
+        XCTAssertTrue(isLegacyAlert("keepalive-maghrib-1767225600"))
+        XCTAssertFalse(isLegacyAlert("adhan|2026-01-01|fajr|1767225600|madinah"), "the current format")
+        XCTAssertFalse(isLegacyAlert("adhan-fajr"))
+    }
 }
