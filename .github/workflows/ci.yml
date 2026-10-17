@@ -54,5 +54,12 @@ jobs:
           xcrun simctl bootstatus "$udid" -b
           xcrun simctl privacy "$udid" grant location io.github.rabayabagum.prayertime
           xcrun simctl location "$udid" set 43.6512,-79.3471
-      - run: xcodebuild -project PrayerTime.xcodeproj -scheme PrayerTime -destination "platform=iOS Simulator,id=$SIM_UDID" test
+      # Errors and failing tests also become annotations, readable without the raw log.
+      - run: |
+          set -o pipefail
+          xcodebuild -project PrayerTime.xcodeproj -scheme PrayerTime -destination "platform=iOS Simulator,id=$SIM_UDID" test 2>&1 | tee xcodebuild.log || {
+            status=$?
+            grep -E "error:|: failed|Failing tests|XCTAssert|Fatal error" xcodebuild.log | sort -u | head -40 | sed 's/^/::error::/'
+            exit $status
+          }
         working-directory: ios
