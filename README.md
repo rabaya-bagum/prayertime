@@ -4,10 +4,11 @@ A free prayer-time app for iOS and Android. Its goals: times that match your
 local mosque, an adhan that fires every time, and nothing leaving your phone.
 No ads, no accounts, no analytics, no paywall.
 
-**Status:** pre-alpha. The calculation core for both platforms is in place and
-tested. The iOS app has a Today screen, offline city search, approximate GPS,
-calculation settings, adhan notifications (system sound for now) and a Qibla
-compass. The Android app isn't started.
+**Status:** pre-alpha. The calculation core and adhan schedulers for both
+platforms are in place and tested. The iOS app has a Today screen, offline
+city search, approximate GPS, calculation settings, adhan notifications (system
+sound until reciter clips are bundled) and a Qibla compass. The Android app UI
+isn't started.
 
 ## Repository layout
 
@@ -15,8 +16,10 @@ compass. The Android app isn't started.
 |---|---|
 | `docs/SPEC.md` | Product spec, with revisions from building the core |
 | `docs/adr/` | Architecture decisions |
-| `android/core` | Kotlin calculation core (plain JVM, no Android dependencies) |
-| `ios/PrayerCore` | Swift package with the same API |
+| `docs/NOTIFICATIONS.md` | How adhans are scheduled on each platform, and what the apps must wire up |
+| `android/core` | Kotlin calculation core and alert planners (plain JVM, no Android dependencies) |
+| `android/notifications` | Android alarms, receivers, channels and the adhan playback service |
+| `ios/PrayerCore` | Swift package: `PrayerCore` (same API as the Kotlin core) and `PrayerNotifications` |
 | `ios/PrayerTime.xcodeproj` | SwiftUI app (iOS 17+), sources in `ios/PrayerTime`, tests in `ios/PrayerTimeTests` and `ios/PrayerTimeUITests` |
 | `shared/testdata` | Fixtures both cores must pass |
 | `tools/` | Generators for fixtures, the city database and the app icon |
@@ -56,8 +59,9 @@ today[.fajr]                                         // Date
 ## Running the tests
 
 ```sh
-cd android && ./gradlew :core:test      # JDK 17+
-cd ios/PrayerCore && swift test         # Xcode 16+ / Swift 6 toolchain
+cd android && ./gradlew :core:test                                   # JDK 17+
+cd android && ./gradlew :notifications:assembleDebug :notifications:lintDebug   # needs ANDROID_HOME
+cd ios/PrayerCore && swift test                                      # Xcode 16+ / Swift 6 toolchain
 ```
 
 CI runs both test suites on every push (`.github/workflows/ci.yml`).
@@ -113,3 +117,7 @@ network calls, and it will never ship ad, analytics or attribution SDKs. See
 
 City data is from [GeoNames](https://www.geonames.org) (CC BY 4.0) and is
 credited on the app's About screen.
+
+## License
+
+MIT. See `LICENSE`. Adhan and its test data are also MIT (`shared/testdata/adhan/LICENSE`).

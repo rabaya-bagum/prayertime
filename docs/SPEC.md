@@ -90,8 +90,8 @@ Each finding is covered by tests in both `android/core` and `ios/PrayerCore`.
 ### Corrections to the notification and surface design
 
 - **Live Activities can't be scheduled locally.** An app generally starts one only while it's in the foreground, or by push-to-start, which needs a server. Prototype before committing to it. Otherwise start one only while the app is open, or drop the feature.
-- **Android: arm 24–48 hours of prayers, not just the next one.** If one re-arm fails, every later adhan is lost without warning. Re-sync the whole set each time an alarm fires. Android allows about 500 alarms per app.
-- **iOS: make the 64th slot a safety net.** The last pending notification should say "Open the app to keep adhans scheduled", which covers users who force-quit the app.
+- **Android: arm 48 hours of prayers, not just the next one.** If one re-arm fails, every later adhan is lost without warning. The whole set is re-synced each time an alarm fires. Android allows about 500 alarms per app. Built: see `docs/NOTIFICATIONS.md`.
+- **iOS: the 64th slot is a safety net.** The last pending notification, 24 hours before the window ends, says "Open the app to keep adhans scheduled", which covers users who force-quit the app. Built: see `docs/NOTIFICATIONS.md`.
 - **iOS travel mode: don't use significant-location change.** It needs "Always" location, which contradicts the privacy stance. Refresh on app open, and treat a timezone change as the background trigger.
 - **Qibla without location permission.** iOS `trueHeading` needs location services. For a manually chosen city, compute declination on-device from the city's coordinates using the World Magnetic Model. Android's `GeomagneticField` already does this.
 - **Opt-in crash reporting is still "collection".** Once a user enables it, the Data safety form and Apple's privacy label must declare it. Prefer no crash SDK, using App Store Connect crash logs and Play Console vitals instead.
