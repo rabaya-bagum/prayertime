@@ -113,11 +113,8 @@ struct SettingsView: View {
                     ForEach(AlertMode.allCases, id: \.self) { Text($0.displayName).tag($0) }
                 }
             }
-            Picker("Reminder before", selection: Binding(
-                get: { model.alerts.reminderMinutes },
-                set: { value in model.updateAlerts { $0.reminderMinutes = value } }
-            )) {
-                ForEach(AlertPreferences.reminderChoices, id: \.self) { Text($0 == 0 ? "None" : "\($0) min").tag($0) }
+            Picker("Reminder before", selection: reminderMinutes) {
+                ForEach(Self.reminderChoices, id: \.self) { Text($0 == 0 ? "None" : "\($0) min").tag($0) }
             }
         } header: {
             Text("Adhan alerts")
@@ -161,8 +158,29 @@ struct SettingsView: View {
 
     private func alertMode(_ prayer: Prayer) -> Binding<AlertMode> {
         Binding(
-            get: { model.alerts.mode(for: prayer) },
-            set: { value in model.updateAlerts { $0.modes[prayer] = value } }
+            get: { model.alerts.alert(for: prayer).mode },
+            set: { value in model.updateAlerts { prefs in
+                var alert = prefs.alert(for: prayer)
+                alert.mode = value
+                prefs.alerts[prayer] = alert
+            } }
+        )
+    }
+
+    private static let reminderChoices = [0, 5, 10, 15, 20, 30, 45, 60]
+
+    /// Reminders are stored per prayer; this screen sets one value for all five
+    /// prayers (sunrise has no reminder) and shows Fajr's as the current value.
+    private var reminderMinutes: Binding<Int> {
+        Binding(
+            get: { model.alerts.alert(for: .fajr).reminderMinutesBefore ?? 0 },
+            set: { value in model.updateAlerts { prefs in
+                for prayer in Prayer.allCases where prayer != .sunrise {
+                    var alert = prefs.alert(for: prayer)
+                    alert.reminderMinutesBefore = value == 0 ? nil : value
+                    prefs.alerts[prayer] = alert
+                }
+            } }
         )
     }
 }

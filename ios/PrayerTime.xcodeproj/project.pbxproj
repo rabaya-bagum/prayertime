@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A10000000000000000000010 /* PrayerCore in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000011 /* PrayerCore */; };
+		A10000000000000000000013 /* PrayerNotifications in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000014 /* PrayerNotifications */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000010 /* PrayerCore in Frameworks */,
+				A10000000000000000000013 /* PrayerNotifications in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +133,7 @@
 			name = PrayerTime;
 			packageProductDependencies = (
 				A10000000000000000000011 /* PrayerCore */,
+				A10000000000000000000014 /* PrayerNotifications */,
 			);
 			productName = PrayerTime;
 			productReference = A10000000000000000000020 /* PrayerTime.app */;
@@ -492,6 +495,10 @@
 		A10000000000000000000011 /* PrayerCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PrayerCore;
+		};
+		A10000000000000000000014 /* PrayerNotifications */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PrayerNotifications;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

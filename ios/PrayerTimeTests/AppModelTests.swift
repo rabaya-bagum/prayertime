@@ -39,7 +39,10 @@ final class AppModelTests: XCTestCase {
         let model = AppModel(defaults: defaults)
         model.setLocation(SavedLocation(city: city("Oslo", "NO")))
         model.updateSettings { $0.offsetMinutes[.fajr] = -5; $0.hijriOffsetDays = 1 }
-        model.updateAlerts { $0.reminderMinutes = 10; $0.modes[.isha] = .silent }
+        model.updateAlerts {
+            $0.alerts[.fajr] = PrayerAlert(mode: .adhan, sound: "madinah", reminderMinutesBefore: 10)
+            $0.alerts[.isha] = PrayerAlert(mode: .silent)
+        }
 
         let reloaded = AppModel(defaults: defaults)
         XCTAssertEqual(reloaded.location, model.location)
@@ -52,5 +55,13 @@ final class AppModelTests: XCTestCase {
         let model = AppModel(defaults: defaults)
         XCTAssertNotNil(TimeZone(identifier: model.location.place.timeZoneId))
         XCTAssertFalse(model.location.isCurrentLocation)
+    }
+
+    func testRecognizesTheEarlierSchedulersAlerts() {
+        XCTAssertTrue(isLegacyAlert("adhan-fajr-1767225600"))
+        XCTAssertTrue(isLegacyAlert("reminder-isha-1767225600"))
+        XCTAssertTrue(isLegacyAlert("keepalive-maghrib-1767225600"))
+        XCTAssertFalse(isLegacyAlert("adhan|2026-01-01|fajr|1767225600|madinah"), "the current format")
+        XCTAssertFalse(isLegacyAlert("adhan-fajr"))
     }
 }

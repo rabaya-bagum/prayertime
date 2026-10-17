@@ -23,6 +23,10 @@ struct PrayerTimeApp: App {
             .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in
                 Task { await model.refreshAlerts() }
             }
+            // Midnight, a manual clock change or a DST switch while the app is running.
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+                Task { await model.refreshAlerts() }
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             switch phase {
