@@ -84,8 +84,8 @@ final class AppModel {
 
     /// Asks once; afterwards the user changes it in the Settings app.
     func requestNotificationsIfNeeded() async {
-        if await center.notificationSettings().authorizationStatus == .notDetermined {
-            _ = try? await center.requestAuthorization(options: [.alert, .sound, .badge])
+        if await NotificationAccess.status() == .notDetermined {
+            _ = await NotificationAccess.request()
         }
         await refreshAlerts()
     }
@@ -94,11 +94,11 @@ final class AppModel {
     /// that changed. Called on launch, on becoming active, on background refresh,
     /// on timezone change and after any edit.
     func refreshAlerts() async {
-        notificationStatus = await center.notificationSettings().authorizationStatus
+        notificationStatus = await NotificationAccess.status()
         let inputs = ScheduleInputs(place: location.place, settings: settings, notifications: alerts)
         let allowed = [UNAuthorizationStatus.authorized, .provisional, .ephemeral].contains(notificationStatus)
         try? await NotificationScheduler(center: center).refresh(allowed ? inputs : nil)
-        pendingAlertCount = await center.pendingNotificationRequests().count
+        pendingAlertCount = await NotificationAccess.pendingCount()
     }
 
     private func save() {
@@ -134,5 +134,21 @@ final class AppModel {
 
     private static func store<T: Encodable>(_ value: T, _ key: String, _ defaults: UserDefaults) {
         defaults.set(try? JSONEncoder().encode(value), forKey: key)
+    }
+}
+
+/// UNNotificationSettings and UNNotificationRequest aren't Sendable, so they're
+/// read here, off the main actor, and only plain values cross back to AppModel.
+private enum NotificationAccess {
+    static func status() async -> UNAuthorizationStatus {
+        await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
+    }
+
+    static func request() async -> Bool {
+        (try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])) ?? false
+    }
+
+    static func pendingCount() async -> Int {
+        await UNUserNotificationCenter.current().pendingNotificationRequests().count
     }
 }
