@@ -1,3 +1,2 @@
-plugins {
-    kotlin("jvm") version "2.4.0" apply false
-}
+// Plugins are declared per module (core: Kotlin/JVM, notifications: Android) so
+// building the core never needs Google's Maven or an Android SDK.

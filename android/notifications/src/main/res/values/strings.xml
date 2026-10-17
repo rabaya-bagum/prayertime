@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_sunrise">Sunrise</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+
+    <string name="alert_time_for">It\'s time for %1$s</string>
+    <string name="alert_sunrise">Sunrise: the time for Fajr has ended</string>
+    <string name="alert_began_at">%1$s began at %2$s</string>
+    <string name="alert_reminder">%1$s at %2$s</string>
+    <string name="alert_stop">Stop</string>
+
+    <string name="channel_adhan_playing">Adhan playing</string>
+    <string name="channel_adhan_clip">Adhan: %1$s</string>
+    <string name="channel_silent">Prayer times (silent)</string>
+    <string name="channel_reminder">Prayer reminders</string>
+</resources>

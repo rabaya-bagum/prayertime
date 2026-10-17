@@ -9,6 +9,7 @@ let package = Package(
     platforms: [.iOS(.v17), .macOS(.v14), .watchOS(.v10)],
     products: [
         .library(name: "PrayerCore", targets: ["PrayerCore"]),
+        .library(name: "PrayerNotifications", targets: ["PrayerNotifications"]),
     ],
     dependencies: [
         .package(url: "https://github.com/batoulapps/adhan-swift", exact: "1.5.0"),
@@ -18,9 +19,18 @@ let package = Package(
             name: "PrayerCore",
             dependencies: [.product(name: "Adhan", package: "adhan-swift")]
         ),
+        // UserNotifications glue for the iOS app; the planning logic lives in PrayerCore.
+        .target(
+            name: "PrayerNotifications",
+            dependencies: ["PrayerCore"]
+        ),
         .testTarget(
             name: "PrayerCoreTests",
             dependencies: ["PrayerCore"]
+        ),
+        .testTarget(
+            name: "PrayerNotificationsTests",
+            dependencies: ["PrayerNotifications"]
         ),
     ],
     swiftLanguageModes: [.v5]
