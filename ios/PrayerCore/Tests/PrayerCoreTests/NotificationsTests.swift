@@ -93,4 +93,15 @@ final class NotificationsTests: XCTestCase {
         XCTAssertEqual(perDate[CivilDate(year: 2026, month: 11, day: 1)], 5)
         XCTAssertEqual(perDate[CivilDate(year: 2026, month: 11, day: 2)], 5)
     }
+
+    func testPolarNightStillPlansOrderedAlerts() {
+        let tromso = Place(name: "Tromsø", latitude: 69.6492, longitude: 18.9553, timeZoneId: "Europe/Oslo")
+        let midwinter = CivilDate(year: 2026, month: 12, day: 21).at(hour: 0, in: tromso.timeZone)
+        let all = NotificationPreferences(alerts: Dictionary(uniqueKeysWithValues: Prayer.allCases.map { ($0, PrayerAlert(mode: .adhan)) }))
+        let plan = NotificationWindowPlanner.plan(
+            ScheduleInputs(place: tromso, settings: PrayerSettings(method: .muslimWorldLeague), notifications: all), now: midwinter
+        )
+        XCTAssertEqual(plan.count, NotificationWindowPlanner.iosCapacity)
+        XCTAssertEqual(plan.map(\.time), plan.map(\.time).sorted())
+    }
 }

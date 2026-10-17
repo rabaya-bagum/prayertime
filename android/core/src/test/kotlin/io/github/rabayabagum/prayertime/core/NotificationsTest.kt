@@ -177,4 +177,14 @@ class NotificationsTest {
         assertEquals("adhan|2026-05-16|fajr|1778923200|makkah", alert.identifier)
         assertEquals("keep_alive|-|-|60|-", PlannedAlert(AlertKind.KEEP_ALIVE, Instant.ofEpochSecond(60)).identifier)
     }
+
+    @Test
+    fun polarNightStillPlansOrderedAlerts() {
+        val tromso = Place("Tromsø", 69.6492, 18.9553, "Europe/Oslo")
+        val midwinter = ZonedDateTime.of(2026, 12, 21, 0, 0, 0, 0, tromso.zone).toInstant()
+        val all = NotificationPreferences(Prayer.entries.associateWith { PrayerAlert(AlertMode.ADHAN) })
+        val plan = NotificationWindowPlanner.plan(ScheduleInputs(tromso, PrayerSettings(Method.MUSLIM_WORLD_LEAGUE), all), midwinter)
+        assertEquals(NotificationWindowPlanner.IOS_CAPACITY, plan.size)
+        assertEquals(plan.sortedBy { it.time }, plan)
+    }
 }

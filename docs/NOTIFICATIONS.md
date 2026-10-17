@@ -26,11 +26,11 @@ diffs the plan against pending requests and only adds or removes what changed.
 Triggers are absolute (UTC components with the zone attached), so travel and
 DST can't shift them.
 
-The app must:
+The app (`ios/PrayerTime`, via `AppModel.refreshAlerts`) must:
 
 1. Call `refresh` on launch, after any settings or place change, in a
    `BGAppRefreshTask` handler, and on `UIApplication.significantTimeChangeNotification`
-   and `.NSSystemTimeZoneDidChange`.
+   and `.NSSystemTimeZoneDidChange`. All wired in `PrayerTimeApp`.
 2. Bundle one `<sound>_clip.caf` per reciter (takbir section, **under 30 s**,
    linear PCM or IMA4). Longer files silently fall back to the default sound.
 3. Handle taps in `userNotificationCenter(_:didReceive:)`: read

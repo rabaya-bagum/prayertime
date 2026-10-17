@@ -1,7 +1,7 @@
 import Foundation
 
 /// What happens at a prayer's start time.
-public enum AlertMode: String, Codable, Sendable {
+public enum AlertMode: String, CaseIterable, Codable, Sendable {
     /// Adhan audio: a short clip on iOS, the full adhan via a foreground service on Android.
     case adhan
     /// A notification with no sound.

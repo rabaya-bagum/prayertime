@@ -24,7 +24,9 @@ extension UNUserNotificationCenter: NotificationCenterClient {
 /// Call `refresh` on every launch, from the BGAppRefreshTask handler, and on
 /// `UIApplication.significantTimeChangeNotification` and
 /// `NSNotification.Name.NSSystemTimeZoneDidChange`. Only changed requests are
-/// touched, so calling it often is cheap.
+/// touched, so calling it often is cheap. Main-actor isolated so a Swift 6 app
+/// can call it from its view model without sending non-Sendable state.
+@MainActor
 public struct NotificationScheduler {
     private let center: NotificationCenterClient
     private let text: NotificationText
@@ -85,7 +87,7 @@ public struct NotificationScheduler {
 
     /// An absolute trigger: components in UTC with the zone attached, so device
     /// time-zone changes and DST can't shift it.
-    static func trigger(at date: Date) -> UNCalendarNotificationTrigger {
+    nonisolated static func trigger(at date: Date) -> UNCalendarNotificationTrigger {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "UTC")!
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
@@ -95,9 +97,9 @@ public struct NotificationScheduler {
     }
 
     /// Bundle a `<sound>_clip.caf` per reciter: the takbir section, under 30 seconds.
-    public static func clipFileName(_ sound: String) -> String { "\(sound)_clip.caf" }
+    public nonisolated static func clipFileName(_ sound: String) -> String { "\(sound)_clip.caf" }
 
-    static func isPrayerAlert(_ identifier: String) -> Bool {
+    nonisolated static func isPrayerAlert(_ identifier: String) -> Bool {
         let kind = identifier.split(separator: "|", maxSplits: 1).first.map(String.init) ?? ""
         return identifier.contains("|") && AlertKind(rawValue: kind) != nil
     }

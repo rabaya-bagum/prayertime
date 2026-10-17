@@ -23,6 +23,7 @@ private final class FakeCenter: NotificationCenterClient {
     }
 }
 
+@MainActor
 final class NotificationSchedulerTests: XCTestCase {
     private let toronto = Place(name: "Toronto", latitude: 43.6532, longitude: -79.3832, timeZoneId: "America/Toronto")
     private var inputs: ScheduleInputs { ScheduleInputs(place: toronto, settings: PrayerSettings(method: .isna)) }

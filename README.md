@@ -86,9 +86,13 @@ How the app behaves:
   time zone of the nearest city.
 - **Method.** The method follows the chosen city's country (`Defaults`) until
   the user changes any calculation setting.
-- **Notifications.** iOS keeps at most 64 pending notifications. The app refills
-  them on launch, on returning to the foreground, on background refresh and on a
-  time-zone change. The 64th slot tells the user to open the app.
+- **Notifications.** Scheduling uses `PrayerNotifications` (see
+  `docs/NOTIFICATIONS.md`). iOS keeps at most 64 pending notifications. The app
+  brings them up to date on launch, on returning to the foreground, on
+  background refresh, on a time-zone change and after any edit, touching only
+  alerts that changed. The 64th slot, a day before the window runs out, tells
+  the user to open the app. Adhans use the system sound until reciter clips
+  (`<sound>_clip.caf`) are bundled.
 - **Qibla.** The compass reads the magnetometer's magnetic heading and converts
   it to true north with the World Magnetic Model (WMM2025, bundled from NOAA,
   valid to 2030) at the saved location. This works without location permission,

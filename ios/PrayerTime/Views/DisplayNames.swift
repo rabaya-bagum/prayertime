@@ -13,6 +13,16 @@ extension Prayer {
     }
 }
 
+extension AlertMode {
+    var displayName: String {
+        switch self {
+        case .adhan: return "Adhan"
+        case .silent: return "Silent"
+        case .off: return "Off"
+        }
+    }
+}
+
 extension HighLatitudeRule {
     var displayName: String {
         switch self {

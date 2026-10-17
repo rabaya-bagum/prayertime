@@ -39,7 +39,10 @@ final class AppModelTests: XCTestCase {
         let model = AppModel(defaults: defaults)
         model.setLocation(SavedLocation(city: city("Oslo", "NO")))
         model.updateSettings { $0.offsetMinutes[.fajr] = -5; $0.hijriOffsetDays = 1 }
-        model.updateAlerts { $0.reminderMinutes = 10; $0.modes[.isha] = .silent }
+        model.updateAlerts {
+            $0.alerts[.fajr] = PrayerAlert(mode: .adhan, sound: "madinah", reminderMinutesBefore: 10)
+            $0.alerts[.isha] = PrayerAlert(mode: .silent)
+        }
 
         let reloaded = AppModel(defaults: defaults)
         XCTAssertEqual(reloaded.location, model.location)
