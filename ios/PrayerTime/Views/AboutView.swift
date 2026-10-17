@@ -21,6 +21,15 @@ struct AboutView: View {
                         Text("Licensed under CC BY 4.0").font(.caption).foregroundStyle(.secondary)
                     }
                 }
+                ForEach(AdhanSound.all) { sound in
+                    Link(destination: sound.source) {
+                        VStack(alignment: .leading) {
+                            Text("Adhan: \(sound.reciter)")
+                            Text("\(sound.credit), \(sound.license). Trimmed and normalized.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                }
                 Link(destination: URL(string: "https://github.com/batoulapps/adhan-swift")!) {
                     VStack(alignment: .leading) {
                         Text("Prayer calculation: Adhan")

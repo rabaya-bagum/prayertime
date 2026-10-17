@@ -1,0 +1,46 @@
+# Audio license register
+
+Every bundled recording, where it came from and on what terms (SPEC: "keep a
+license register in the repo"). The files are built by
+`tools/make_adhan_audio.sh`, which downloads each source, checks its SHA-1,
+and writes the iOS and Android files. Add a row here and a `build` line there
+for each new reciter, and an entry in `AdhanSound.all` (iOS) and
+`BundledAdhans` (Android).
+
+| Sound id | Reciter | Source | Author | License | SHA-1 of source |
+|---|---|---|---|---|---|
+| `azeez` | Aaqib Azeez | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:The_Adhan_-_Muslim_Call_to_Prayer_-_Aaqib_Azeez.mp3) | [Atcovi](https://commons.wikimedia.org/wiki/User:Atcovi), "own work", 2020-12-23 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | `971bced4b0bf6067358afc78cac6e9d219226c19` |
+
+## What we changed
+
+From each source: downmixed to mono and loudness-normalized (−16 LUFS), then
+- `<id>_clip.caf` / `<id>_clip.m4a`: the opening takbir only (first 27.5 s for
+  `azeez`), with a 0.8 s fade-out. iOS notification sounds must be under 30 s.
+- `<id>_adhan.m4a`: the full recording, re-encoded as AAC.
+
+These are adaptations, so under CC BY-SA they're shared under CC BY-SA 4.0
+too. That covers the audio files only. The app's code stays MIT; bundling
+the files is a collection, not an adaptation of the code.
+
+## Attribution
+
+The About screen credits each recording with its reciter, author, license and
+a link to the source (`AdhanSound` on iOS). The Android app must show the same.
+
+## Checked before release
+
+- [ ] **Performer consent for `azeez`.** The uploader states the file is their
+      own work and names the reciter. Confirm with the uploader that the
+      reciter agreed to the CC BY-SA release, or replace it with a recording
+      made under a signed release.
+- [ ] **App Store and CC BY-SA.** CC BY-SA 4.0 forbids adding technical
+      measures that restrict the licensed material. The audio is shipped as
+      plain files in the bundle, but have this reviewed before release.
+
+Rejected while searching Commons (October 2026):
+- "Call to prayer by Sabah Fakhry.mp3": tagged public domain on the grounds
+  that the adhan dates from 622 CE, but that covers the text, not this 1985
+  performance, which was taken from YouTube.
+- Field recordings ("Athan in Ramadan", "Athan during Ramadan 2", "Llamada a
+  oración Mezquita Hassan II"): partial, or distant with traffic, wind and
+  conversation.

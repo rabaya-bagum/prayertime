@@ -28,7 +28,7 @@ data class PrayerAlert(
     }
 
     companion object {
-        const val DEFAULT_SOUND = "makkah"
+        const val DEFAULT_SOUND = "azeez"
     }
 }
 

@@ -33,10 +33,16 @@ The app (`ios/PrayerTime`, via `AppModel.refreshAlerts`) must:
    and `.NSSystemTimeZoneDidChange`. All wired in `PrayerTimeApp`.
 2. Bundle one `<sound>_clip.caf` per reciter (takbir section, **under 30 s**,
    linear PCM or IMA4). Longer files silently fall back to the default sound.
+   Done: `tools/make_adhan_audio.sh` builds them, `AdhanSoundTests` checks the
+   length, and `docs/AUDIO_LICENSES.md` records each source.
 3. Handle taps in `userNotificationCenter(_:didReceive:)`: read
-   `UserInfoKey.sound` and play the full adhan in the foreground.
+   `UserInfoKey.sound` and play the full adhan in the foreground. Done in
+   `AppDelegate`: opening an adhan within 10 minutes plays it in full, and an
+   adhan arriving while the app is open plays in full instead of the clip.
 4. Add the Time Sensitive Notifications capability so adhans can break
-   through Focus (`interruptionLevel = .timeSensitive`).
+   through Focus (`interruptionLevel = .timeSensitive`). Done:
+   `PrayerTime.entitlements`. Enable the capability for the App ID in the
+   developer portal when signing for devices.
 5. Ask for notification permission during onboarding, after the user has
    picked a method. Adhans aren't critical alerts, so don't request that.
 

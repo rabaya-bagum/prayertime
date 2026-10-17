@@ -5,6 +5,7 @@ import SwiftUI
 struct PrayerTimeApp: App {
     nonisolated static let refreshTaskId = "io.github.rabayabagum.prayertime.refresh"
 
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @State private var model = AppModel()
     @Environment(\.scenePhase) private var scenePhase
 
@@ -12,8 +13,10 @@ struct PrayerTimeApp: App {
         WindowGroup {
             TabView {
                 TodayView()
+                    .adhanBar()
                     .tabItem { Label("Times", systemImage: "clock") }
                 QiblaView()
+                    .adhanBar()
                     .tabItem { Label("Qibla", systemImage: "location.north.circle") }
             }
             // NSAccentColorName alone doesn't reach the tab bar or Color.accentColor on iOS 26.

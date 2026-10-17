@@ -10,7 +10,7 @@ public enum AlertMode: String, CaseIterable, Codable, Sendable {
 }
 
 public struct PrayerAlert: Equatable, Codable, Sendable {
-    public static let defaultSound = "makkah"
+    public static let defaultSound = "azeez"
 
     public var mode: AlertMode
     /// Reciter/sound id. The apps map it to bundled audio files.
