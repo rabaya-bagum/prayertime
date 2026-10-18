@@ -2,8 +2,8 @@
 // channels and the foreground service that plays the full adhan. All decisions
 // (what to arm, when, with which sound) live in :core and are unit-tested there.
 plugins {
-    id("com.android.library") version "8.13.0"
-    kotlin("android") version "2.4.0"
+    id("com.android.library")
+    kotlin("android")
 }
 
 android {

@@ -1,7 +1,7 @@
 // Platform-neutral prayer-time logic for the Android app. Plain Kotlin/JVM with
 // no Android dependencies, so it runs under `./gradlew :core:test` anywhere.
 plugins {
-    kotlin("jvm") version "2.4.0"
+    kotlin("jvm")
 }
 
 java {

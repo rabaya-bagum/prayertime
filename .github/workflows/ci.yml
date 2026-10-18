@@ -18,7 +18,7 @@ jobs:
       - run: env -u ANDROID_HOME -u ANDROID_SDK_ROOT ./gradlew :core:test
         working-directory: android
 
-  android-notifications:
+  android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,13 +27,24 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
-      - run: ./gradlew :notifications:assembleDebug :notifications:lintDebug
+      # Kotlin errors, failing tests and lint errors also become annotations, readable without the raw log.
+      - run: |
+          set -o pipefail
+          ./gradlew :notifications:assembleDebug :notifications:lintDebug \
+            :app:assembleDebug :app:testDebugUnitTest :app:lintDebug 2>&1 | tee gradle.log || {
+            status=$?
+            grep -E "^e: |FAILED|Error:|error:|What went wrong" -A2 gradle.log | grep -v "^--$" | awk '!seen[$0]++' | head -40 | sed 's/^/::error::/'
+            exit $status
+          }
         working-directory: android
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
-          name: lint-report
-          path: android/notifications/build/reports/
+          name: android-debug
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/*/build/reports/
+          if-no-files-found: ignore
 
   ios-core:
     runs-on: macos-15
