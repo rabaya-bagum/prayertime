@@ -47,13 +47,13 @@ kotlin {
 }
 
 /**
- * The city database is shared with iOS (ios/PrayerTime/Resources/cities.tsv,
- * built by tools/gen_cities.py). Copy just that file into the assets rather
- * than adding the whole iOS resources folder.
+ * The city database and magnetic model are shared with iOS (ios/PrayerTime/Resources):
+ * cities.tsv from tools/gen_cities.py, WMM2025.COF from NOAA. Copy just those
+ * files into the assets rather than adding the whole iOS resources folder.
  */
-abstract class CopyCityDatabase : DefaultTask() {
-    @get:InputFile
-    abstract val source: RegularFileProperty
+abstract class CopySharedAssets : DefaultTask() {
+    @get:InputFiles
+    abstract val sources: ConfigurableFileCollection
 
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
@@ -61,17 +61,19 @@ abstract class CopyCityDatabase : DefaultTask() {
     @TaskAction
     fun copy() {
         val target = outputDir.get().asFile.apply { mkdirs() }
-        source.get().asFile.copyTo(target.resolve("cities.tsv"), overwrite = true)
+        sources.forEach { it.copyTo(target.resolve(it.name), overwrite = true) }
     }
 }
 
-val copyCityDatabase = tasks.register<CopyCityDatabase>("copyCityDatabase") {
-    source.set(rootProject.layout.projectDirectory.file("../ios/PrayerTime/Resources/cities.tsv"))
-    outputDir.set(layout.buildDirectory.dir("generated/cityAssets"))
+val iosResources = rootProject.layout.projectDirectory.dir("../ios/PrayerTime/Resources")
+
+val copySharedAssets = tasks.register<CopySharedAssets>("copySharedAssets") {
+    sources.from(iosResources.file("cities.tsv"), iosResources.file("WMM2025.COF"))
+    outputDir.set(layout.buildDirectory.dir("generated/sharedAssets"))
 }
 
 extensions.getByType<ApplicationAndroidComponentsExtension>().onVariants { variant ->
-    variant.sources.assets?.addGeneratedSourceDirectory(copyCityDatabase, CopyCityDatabase::outputDir)
+    variant.sources.assets?.addGeneratedSourceDirectory(copySharedAssets, CopySharedAssets::outputDir)
 }
 
 dependencies {
@@ -96,5 +98,8 @@ dependencies {
 }
 
 tasks.withType<Test>().configureEach {
-    systemProperty("cities.tsv", rootProject.layout.projectDirectory.file("../ios/PrayerTime/Resources/cities.tsv").asFile.path)
+    systemProperty("cities.tsv", iosResources.file("cities.tsv").asFile.path)
+    systemProperty("wmm.cof", iosResources.file("WMM2025.COF").asFile.path)
+    // NOAA's published test values, shared with the iOS MagneticModelTests.
+    systemProperty("wmm.testValues", rootProject.layout.projectDirectory.file("../ios/PrayerTimeTests/WMM2025_TestValues.txt").asFile.path)
 }
