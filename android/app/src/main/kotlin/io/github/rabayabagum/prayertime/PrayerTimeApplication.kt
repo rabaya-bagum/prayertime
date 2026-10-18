@@ -16,6 +16,7 @@ import io.github.rabayabagum.prayertime.notifications.PrayerScheduleSource
 import io.github.rabayabagum.prayertime.notifications.PrayerScheduleSourceProvider
 import io.github.rabayabagum.prayertime.notifications.PrayerScheduler
 import io.github.rabayabagum.prayertime.qibla.MagneticModel
+import io.github.rabayabagum.prayertime.widget.WidgetUpdater
 import java.time.ZoneId
 import kotlin.concurrent.thread
 
@@ -50,9 +51,12 @@ class PrayerTimeApplication : Application(), PrayerScheduleSourceProvider {
         prefs.edit().putString(KEY_STATE, StoredState.encode(state)).apply()
     }
 
-    /** Re-arms the alarm window off the main thread. Safe to call often. */
+    /** Re-arms the alarm window and redraws any widgets, off the main thread. Safe to call often. */
     fun resync() {
-        thread(name = "prayer-sync") { PrayerScheduler.sync(this) }
+        thread(name = "prayer-sync") {
+            PrayerScheduler.sync(this)
+            WidgetUpdater.update(this)
+        }
     }
 
     override fun onCreate() {

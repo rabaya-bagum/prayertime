@@ -3,6 +3,7 @@ import Observation
 import PrayerCore
 import PrayerNotifications
 import UserNotifications
+import WidgetKit
 
 /// Where times are calculated for. The country code picks the default method.
 struct SavedLocation: Equatable, Codable, Sendable {
@@ -94,12 +95,22 @@ final class AppModel {
     /// that changed. Called on launch, on becoming active, on background refresh,
     /// on timezone change and after any edit.
     func refreshAlerts() async {
+        shareWithWidgets()
         notificationStatus = await NotificationAccess.status()
         let inputs = ScheduleInputs(place: location.place, settings: settings, notifications: alerts)
         let allowed = [UNAuthorizationStatus.authorized, .provisional, .ephemeral].contains(notificationStatus)
         await NotificationAccess.removeLegacyAlerts()
         try? await NotificationScheduler(center: center).refresh(allowed ? inputs : nil)
         pendingAlertCount = await NotificationAccess.pendingCount()
+    }
+
+    /// Widgets read the place and settings from the App Group. Only a real change
+    /// writes and reloads them, so returning to the app doesn't churn timelines.
+    private func shareWithWidgets() {
+        let shared = SharedConfiguration(place: location.place, subtitle: location.subtitle, settings: settings)
+        guard shared != SharedConfiguration.load() else { return }
+        shared.save()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func save() {

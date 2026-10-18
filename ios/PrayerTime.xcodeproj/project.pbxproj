@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		A10000000000000000000010 /* PrayerCore in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000011 /* PrayerCore */; };
 		A10000000000000000000013 /* PrayerNotifications in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000014 /* PrayerNotifications */; };
+		A100000000000000000000BB /* PrayerCore in Frameworks */ = {isa = PBXBuildFile; productRef = A100000000000000000000BA /* PrayerCore */; };
+		A100000000000000000000BC /* PrayerTimeWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A100000000000000000000B4 /* PrayerTimeWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,12 +28,34 @@
 			remoteGlobalIDString = A10000000000000000000050;
 			remoteInfo = PrayerTime;
 		};
+		A100000000000000000000BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000060 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A100000000000000000000B0;
+			remoteInfo = PrayerTimeWidgets;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A100000000000000000000BD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A100000000000000000000BC /* PrayerTimeWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A10000000000000000000020 /* PrayerTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrayerTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000021 /* PrayerTimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrayerTimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000022 /* PrayerTimeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrayerTimeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A100000000000000000000B4 /* PrayerTimeWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PrayerTimeWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -42,6 +66,14 @@
 				PrayerTime.entitlements,
 			);
 			target = A10000000000000000000050 /* PrayerTime */;
+		};
+		A100000000000000000000B6 /* Exceptions for "PrayerTimeWidgets" folder in "PrayerTimeWidgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				PrayerTimeWidgets.entitlements,
+			);
+			target = A100000000000000000000B0 /* PrayerTimeWidgets */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -62,6 +94,14 @@
 		A10000000000000000000033 /* PrayerTimeUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PrayerTimeUITests;
+			sourceTree = "<group>";
+		};
+		A100000000000000000000B5 /* PrayerTimeWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A100000000000000000000B6 /* Exceptions for "PrayerTimeWidgets" folder in "PrayerTimeWidgets" target */,
+			);
+			path = PrayerTimeWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -90,6 +130,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A100000000000000000000B2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000000000000000000BB /* PrayerCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -99,6 +147,7 @@
 				A10000000000000000000030 /* PrayerTime */,
 				A10000000000000000000031 /* PrayerTimeTests */,
 				A10000000000000000000033 /* PrayerTimeUITests */,
+				A100000000000000000000B5 /* PrayerTimeWidgets */,
 				A10000000000000000000002 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -109,6 +158,7 @@
 				A10000000000000000000020 /* PrayerTime.app */,
 				A10000000000000000000021 /* PrayerTimeTests.xctest */,
 				A10000000000000000000022 /* PrayerTimeUITests.xctest */,
+				A100000000000000000000B4 /* PrayerTimeWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,10 +173,12 @@
 				A10000000000000000000051 /* Sources */,
 				A10000000000000000000040 /* Frameworks */,
 				A10000000000000000000052 /* Resources */,
+				A100000000000000000000BD /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A100000000000000000000BE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A10000000000000000000030 /* PrayerTime */,
@@ -182,6 +234,29 @@
 			productReference = A10000000000000000000022 /* PrayerTimeUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		A100000000000000000000B0 /* PrayerTimeWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A100000000000000000000B7 /* Build configuration list for PBXNativeTarget "PrayerTimeWidgets" */;
+			buildPhases = (
+				A100000000000000000000B1 /* Sources */,
+				A100000000000000000000B2 /* Frameworks */,
+				A100000000000000000000B3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A100000000000000000000B5 /* PrayerTimeWidgets */,
+			);
+			name = PrayerTimeWidgets;
+			packageProductDependencies = (
+				A100000000000000000000BA /* PrayerCore */,
+			);
+			productName = PrayerTimeWidgets;
+			productReference = A100000000000000000000B4 /* PrayerTimeWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -220,6 +295,7 @@
 				A10000000000000000000050 /* PrayerTime */,
 				A10000000000000000000090 /* PrayerTimeTests */,
 				A100000000000000000000A0 /* PrayerTimeUITests */,
+				A100000000000000000000B0 /* PrayerTimeWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -240,6 +316,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A10000000000000000000056 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100000000000000000000B3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -270,6 +353,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A100000000000000000000B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -282,6 +372,11 @@
 			isa = PBXTargetDependency;
 			target = A10000000000000000000050 /* PrayerTime */;
 			targetProxy = A100000000000000000000A2 /* PBXContainerItemProxy */;
+		};
+		A100000000000000000000BE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A100000000000000000000B0 /* PrayerTimeWidgets */;
+			targetProxy = A100000000000000000000BF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -446,6 +541,54 @@
 			};
 			name = Release;
 		};
+		A100000000000000000000B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PrayerTimeWidgets/PrayerTimeWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PrayerTimeWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Prayer Time";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.rabayabagum.prayertime.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A100000000000000000000B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PrayerTimeWidgets/PrayerTimeWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PrayerTimeWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Prayer Time";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.rabayabagum.prayertime.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -485,6 +628,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A100000000000000000000B7 /* Build configuration list for PBXNativeTarget "PrayerTimeWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A100000000000000000000B8 /* Debug */,
+				A100000000000000000000B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -502,6 +654,10 @@
 		A10000000000000000000014 /* PrayerNotifications */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PrayerNotifications;
+		};
+		A100000000000000000000BA /* PrayerCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PrayerCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
