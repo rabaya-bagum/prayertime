@@ -10,6 +10,17 @@ for each new reciter, and an entry in `AdhanSound.all` (iOS) and
 | Sound id | Reciter | Source | Author | License | SHA-1 of source |
 |---|---|---|---|---|---|
 | `azeez` | Aaqib Azeez | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:The_Adhan_-_Muslim_Call_to_Prayer_-_Aaqib_Azeez.mp3) | [Atcovi](https://commons.wikimedia.org/wiki/User:Atcovi), "own work", 2020-12-23 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | `971bced4b0bf6067358afc78cac6e9d219226c19` |
+| `azeez` (Fajr) | Besim Azemi | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Eid_al-Fitr_Fajr_azan_at_Malm%C3%B6_Mosque_-_19_August_2012.webm), from the mosque's [YouTube channel](https://www.youtube.com/watch?v=0IHfm4Y82xA) | Islamic Center Malmö, 2012-08-19 (Eid al-Fitr Fajr) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), license reviewed on Commons | `bc75d5cee271efb67f03d3f35474a9362fce103f` |
+
+## Fajr
+
+The Fajr adhan adds "As-salatu khayrun min an-nawm" twice after "Hayya 'ala
+al-falah", so a regular recording must never play at Fajr. Each sound id can
+have a Fajr recording, `<id>_fajr_adhan.m4a`; if it has none, Fajr plays only
+the takbir clip, which is the same in every adhan. `AdhanSoundTests` and
+`BundledAdhans` enforce this. Aaqib Azeez has no Fajr recording on Commons, so
+`azeez` uses Besim Azemi's for Fajr, and the app credits him when it plays.
+Replace it with the same reciter's Fajr adhan if one becomes available.
 
 ## What we changed
 
@@ -17,6 +28,9 @@ From each source: downmixed to mono and loudness-normalized (−16 LUFS), then
 - `<id>_clip.caf` / `<id>_clip.m4a`: the opening takbir only (first 27.5 s for
   `azeez`), with a 0.8 s fade-out. iOS notification sounds must be under 30 s.
 - `<id>_adhan.m4a`: the full recording, re-encoded as AAC.
+- `<id>_fajr_adhan.m4a`: the Fajr recording's audio track, from 11.5 s (before
+  that is the room before the first takbir), with a 0.8 s fade-out. The
+  source ends as the last syllable fades, so a little reverb is lost.
 
 These are adaptations, so under CC BY-SA they're shared under CC BY-SA 4.0
 too. That covers the audio files only. The app's code stays MIT; bundling
@@ -33,6 +47,10 @@ a link to the source (`AdhanSound` on iOS). The Android app must show the same.
       own work and names the reciter. Confirm with the uploader that the
       reciter agreed to the CC BY-SA release, or replace it with a recording
       made under a signed release.
+- [ ] **Listen to the Fajr recording** and confirm it includes "As-salatu
+      khayrun min an-nawm". Its phrase structure (14 sung phrases with the
+      takbirs paired) fits the Fajr adhan, but this was checked from levels,
+      not by ear.
 - [ ] **App Store and CC BY-SA.** CC BY-SA 4.0 forbids adding technical
       measures that restrict the licensed material. The audio is shipped as
       plain files in the bundle, but have this reviewed before release.

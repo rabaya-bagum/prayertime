@@ -116,24 +116,33 @@ struct SettingsView: View {
             Picker("Reminder before", selection: reminderMinutes) {
                 ForEach(Self.reminderChoices, id: \.self) { Text($0 == 0 ? "None" : "\($0) min").tag($0) }
             }
-            let sound = AdhanSound.named(model.alerts.alert(for: .fajr).sound)
-            Button {
-                AdhanPlayer.shared.toggle(sound)
-            } label: {
-                LabeledContent {
-                    Image(systemName: AdhanPlayer.shared.playing == sound ? "stop.circle.fill" : "play.circle.fill")
-                        .font(.title2)
-                } label: {
-                    Text("Adhan voice")
-                    Text(sound.reciter)
-                }
-            }
-            .accessibilityLabel(AdhanPlayer.shared.playing == sound ? "Stop adhan preview" : "Play adhan preview")
+            let sound = AdhanSound.named(model.alerts.alert(for: .dhuhr).sound)
+            preview(sound, for: nil, title: "Adhan voice")
+            preview(sound, for: .fajr, title: "Fajr adhan")
         } header: {
             Text("Adhan alerts")
         } footer: {
             Text("iOS keeps at most 64 alerts waiting, about a week and a half of prayers. Open the app now and then so it can schedule more. \(model.pendingAlertCount) scheduled now.")
         }
+    }
+
+    private func preview(_ sound: AdhanSound, for prayer: Prayer?, title: String) -> some View {
+        let player = AdhanPlayer.shared
+        let isPlaying = player.isPlaying(sound, for: prayer)
+        let detail = prayer == .fajr && sound.fajr == nil
+            ? "Opening takbir only: no Fajr recording yet"
+            : sound.recording(for: prayer).reciter
+        return Button {
+            player.toggle(sound, for: prayer)
+        } label: {
+            LabeledContent {
+                Image(systemName: isPlaying ? "stop.circle.fill" : "play.circle.fill").font(.title2)
+            } label: {
+                Text(title)
+                Text(detail)
+            }
+        }
+        .accessibilityLabel(isPlaying ? "Stop \(title.lowercased()) preview" : "Play \(title.lowercased()) preview")
     }
 
     // MARK: Bindings

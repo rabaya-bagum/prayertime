@@ -39,6 +39,8 @@ The app (`ios/PrayerTime`, via `AppModel.refreshAlerts`) must:
    `UserInfoKey.sound` and play the full adhan in the foreground. Done in
    `AppDelegate`: opening an adhan within 10 minutes plays it in full, and an
    adhan arriving while the app is open plays in full instead of the clip.
+   Fajr plays the reciter's Fajr recording (with "As-salatu khayrun min
+   an-nawm"), or only the takbir clip if there is none, never the regular one.
 4. Add the Time Sensitive Notifications capability so adhans can break
    through Focus (`interruptionLevel = .timeSensitive`). Done:
    `PrayerTime.entitlements`. Enable the capability for the App ID in the
@@ -83,6 +85,8 @@ The app must:
 1. Have its `Application` implement `PrayerScheduleSourceProvider`. Return
    current inputs from storage that is safe to read on a background thread,
    plus URIs for each reciter's full adhan and clip (e.g. `res/raw`).
+   `adhanUri` gets the prayer: Fajr needs a Fajr recording, or the clip.
+   `BundledAdhans` does both for the bundled files.
 2. Call `PrayerScheduler.sync(context)` on launch and after any settings or
    place change.
 3. In onboarding, request `POST_NOTIFICATIONS`, then send the user to

@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import io.github.rabayabagum.prayertime.core.AlarmWindowPlanner
+import io.github.rabayabagum.prayertime.core.Prayer
 import io.github.rabayabagum.prayertime.core.ScheduleInputs
 import java.time.Instant
 
@@ -20,8 +21,12 @@ interface PrayerScheduleSource {
     /** Current place and preferences, or null before onboarding. Called off the main thread. */
     fun inputs(): ScheduleInputs?
 
-    /** The full adhan recording for a sound id, played by the foreground service. */
-    fun adhanUri(sound: String): Uri?
+    /**
+     * The full adhan recording for a sound id, played by the foreground service.
+     * For Fajr it must include "As-salatu khayrun min an-nawm"; return the clip
+     * when the reciter has no Fajr recording ([BundledAdhans] does this).
+     */
+    fun adhanUri(sound: String, prayer: Prayer?): Uri?
 
     /** A clip under 30 s, used as the channel sound when alarms are inexact and no service can start. */
     fun adhanClipUri(sound: String): Uri?

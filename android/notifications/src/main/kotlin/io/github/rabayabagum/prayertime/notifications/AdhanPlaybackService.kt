@@ -43,7 +43,7 @@ class AdhanPlaybackService : Service() {
         }
 
         val audio = getSystemService(AudioManager::class.java)
-        val uri = alert.sound?.let { PrayerScheduler.source(this).adhanUri(it) }
+        val uri = alert.sound?.let { PrayerScheduler.source(this).adhanUri(it, alert.prayer) }
         if (uri == null || audio.ringerMode != AudioManager.RINGER_MODE_NORMAL) {
             Alerts.postSilent(this, alert)
             stopSelf()

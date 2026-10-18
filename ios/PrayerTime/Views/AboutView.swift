@@ -21,11 +21,11 @@ struct AboutView: View {
                         Text("Licensed under CC BY 4.0").font(.caption).foregroundStyle(.secondary)
                     }
                 }
-                ForEach(AdhanSound.all) { sound in
-                    Link(destination: sound.source) {
+                ForEach(AdhanSound.all.flatMap(\.recordings), id: \.self) { recording in
+                    Link(destination: recording.source) {
                         VStack(alignment: .leading) {
-                            Text("Adhan: \(sound.reciter)")
-                            Text("\(sound.credit), \(sound.license). Trimmed and normalized.")
+                            Text("Adhan: \(recording.reciter)")
+                            Text("\(recording.credit), \(recording.license). Trimmed and normalized.")
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }

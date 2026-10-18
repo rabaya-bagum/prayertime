@@ -6,12 +6,12 @@ struct AdhanBar: ViewModifier {
 
     func body(content: Content) -> some View {
         content.safeAreaInset(edge: .bottom) {
-            if let sound = player.playing {
+            if let playing = player.playing {
                 HStack {
                     Image(systemName: "speaker.wave.2.fill").foregroundStyle(.tint)
                     VStack(alignment: .leading) {
-                        Text("Adhan").font(.headline)
-                        Text(sound.reciter).font(.caption).foregroundStyle(.secondary)
+                        Text(playing.prayer == .fajr ? "Fajr adhan" : "Adhan").font(.headline)
+                        Text(playing.recording.reciter).font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
                     Button("Stop", systemImage: "stop.fill") { player.stop() }
