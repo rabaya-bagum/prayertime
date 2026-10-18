@@ -7,9 +7,10 @@ No ads, no accounts, no analytics, no paywall.
 **Status:** pre-alpha. The calculation core and adhan schedulers for both
 platforms are in place and tested. The iOS app has a Today screen, offline
 city search, approximate GPS, calculation settings, adhan notifications with a
-bundled recording, and a Qibla compass. The Android app has the same screens:
-Today, offline city search and approximate GPS, settings, a permissions card,
-adhan alarms and a Qibla compass.
+bundled recording, a Qibla compass, and home- and lock-screen widgets. The
+Android app has the same screens: Today, offline city search and approximate
+GPS, settings, a permissions card, adhan alarms, a Qibla compass and home-screen
+widgets.
 
 ## Repository layout
 
@@ -23,7 +24,7 @@ adhan alarms and a Qibla compass.
 | `android/notifications` | Android alarms, receivers, channels and the adhan playback service |
 | `android/app` | Jetpack Compose app (Android 8+), unit tests in `android/app/src/test` |
 | `ios/PrayerCore` | Swift package: `PrayerCore` (same API as the Kotlin core) and `PrayerNotifications` |
-| `ios/PrayerTime.xcodeproj` | SwiftUI app (iOS 17+), sources in `ios/PrayerTime`, tests in `ios/PrayerTimeTests` and `ios/PrayerTimeUITests` |
+| `ios/PrayerTime.xcodeproj` | SwiftUI app (iOS 17+), sources in `ios/PrayerTime`, widgets in `ios/PrayerTimeWidgets`, tests in `ios/PrayerTimeTests` and `ios/PrayerTimeUITests` |
 | `shared/testdata` | Fixtures both cores must pass |
 | `tools/` | Generators for fixtures, the city database and the app icon |
 
@@ -106,6 +107,15 @@ How the app behaves:
   announcement when the phone faces the Qibla. In DEBUG builds,
   `QIBLA_TEST_HEADING` pins the heading so UI tests can drive it on a simulator.
 
+- **Widgets.** "Next prayer" (home screen small, and lock screen inline,
+  circular and rectangular) and "Today's prayers" (home screen medium and
+  large). The app shares its place and settings through the App Group
+  `group.io.github.rabayabagum.prayertime`, and the widget computes times
+  itself. Its timeline has an entry at each prayer and at local midnight
+  (`WidgetTimeline` in PrayerCore), and countdowns use `Text(timerInterval:)`,
+  so they stay live without spending refresh budget. Device builds need the App
+  Group enabled on both App IDs.
+
 Regenerating bundled assets:
 
 ```sh
@@ -144,6 +154,11 @@ How it differs from iOS:
   values) converts it to true north. Android's built-in `GeomagneticField`
   isn't used because its coefficients depend on the OS version. Accuracy comes
   from the magnetometer's calibration status.
+- **Widgets.** "Next prayer" (2×2) and "Today's prayers" (3×3) are plain
+  RemoteViews widgets. Their countdowns are `Chronometer`s that tick on their
+  own. `WidgetUpdater` redraws both at the next prayer or local midnight with a
+  one-minute window alarm that needs no permission and doesn't wake the phone.
+  It also redraws after any settings change and on clock or time-zone changes.
 
 ## Privacy
 
