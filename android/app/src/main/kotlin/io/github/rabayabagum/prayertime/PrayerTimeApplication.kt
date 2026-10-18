@@ -15,6 +15,7 @@ import io.github.rabayabagum.prayertime.notifications.BundledAdhans
 import io.github.rabayabagum.prayertime.notifications.PrayerScheduleSource
 import io.github.rabayabagum.prayertime.notifications.PrayerScheduleSourceProvider
 import io.github.rabayabagum.prayertime.notifications.PrayerScheduler
+import io.github.rabayabagum.prayertime.qibla.MagneticModel
 import java.time.ZoneId
 import kotlin.concurrent.thread
 
@@ -26,6 +27,11 @@ class PrayerTimeApplication : Application(), PrayerScheduleSourceProvider {
 
     /** Loaded on first use: ~34k rows, so off the main thread where possible. */
     val cities: CityDatabase by lazy { assets.open("cities.tsv").reader().use(::CityDatabase) }
+
+    /** The World Magnetic Model shared with iOS, for converting the compass to true north. */
+    val magneticModel: MagneticModel by lazy {
+        checkNotNull(MagneticModel.parse(assets.open("WMM2025.COF").reader().use { it.readText() })) { "Bundled WMM2025.COF is unreadable" }
+    }
 
     private val prefs by lazy { getSharedPreferences("prayertime", Context.MODE_PRIVATE) }
 

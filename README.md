@@ -7,8 +7,9 @@ No ads, no accounts, no analytics, no paywall.
 **Status:** pre-alpha. The calculation core and adhan schedulers for both
 platforms are in place and tested. The iOS app has a Today screen, offline
 city search, approximate GPS, calculation settings, adhan notifications with a
-bundled recording, and a Qibla compass. The Android app UI
-isn't started.
+bundled recording, and a Qibla compass. The Android app has the same screens:
+Today, offline city search and approximate GPS, settings, a permissions card,
+adhan alarms and a Qibla compass.
 
 ## Repository layout
 
@@ -20,6 +21,7 @@ isn't started.
 | `docs/AUDIO_LICENSES.md` | Source, author and license of each bundled adhan recording |
 | `android/core` | Kotlin calculation core and alert planners (plain JVM, no Android dependencies) |
 | `android/notifications` | Android alarms, receivers, channels and the adhan playback service |
+| `android/app` | Jetpack Compose app (Android 8+), unit tests in `android/app/src/test` |
 | `ios/PrayerCore` | Swift package: `PrayerCore` (same API as the Kotlin core) and `PrayerNotifications` |
 | `ios/PrayerTime.xcodeproj` | SwiftUI app (iOS 17+), sources in `ios/PrayerTime`, tests in `ios/PrayerTimeTests` and `ios/PrayerTimeUITests` |
 | `shared/testdata` | Fixtures both cores must pass |
@@ -115,6 +117,33 @@ python3 tools/gen_cities.py cities15000.txt admin1CodesASCII.txt countryInfo.txt
 # App icon
 swift tools/make_icon.swift ios/PrayerTime/Assets.xcassets/AppIcon.appiconset/AppIcon.png
 ```
+
+## Running the Android app
+
+Open `android/` in Android Studio and run the `app` configuration, or build the
+debug APK and its unit tests from the command line (needs `ANDROID_HOME`):
+
+```sh
+cd android && ./gradlew :app:assembleDebug :app:testDebugUnitTest
+adb install app/build/outputs/apk/debug/app-debug.apk
+```
+
+CI uploads the debug APK as the `android-debug` artifact on every run.
+
+How it differs from iOS:
+
+- **Shared data.** `cities.tsv` and `WMM2025.COF` are copied from
+  `ios/PrayerTime/Resources` into the app's assets at build time, so both apps
+  read the same files.
+- **Adhans.** Alarms are set 48 hours ahead and the full adhan plays from a
+  foreground service, even with the app closed (`docs/NOTIFICATIONS.md`). A card
+  on the Times screen asks, one at a time, for notification permission, exact
+  alarms and an exemption from battery optimization.
+- **Qibla.** The rotation-vector sensor gives the magnetic heading, and the same
+  World Magnetic Model as iOS (ported to Kotlin and tested against NOAA's
+  values) converts it to true north. Android's built-in `GeomagneticField`
+  isn't used because its coefficients depend on the OS version. Accuracy comes
+  from the magnetometer's calibration status.
 
 ## Privacy
 
