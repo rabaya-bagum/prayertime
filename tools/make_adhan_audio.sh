@@ -43,15 +43,16 @@ build() {
     echo "$id: clip $(afinfo "$ios/${id}_clip.caf" | awk '/estimated duration/ {print $3}') s"
 }
 
-# id | Commons file URL | SHA-1 | start (s), skipping anything before the first takbir
+# id | Commons file URL | SHA-1 | start and end (s) of the adhan itself, leaving out
+# anything before the first takbir and anything recited after the last line
 build_fajr() {
-    id=$1 url=$2 sha1=$3 start=$4
+    id=$1 url=$2 sha1=$3 start=$4 end=$5
     src="$work/${id}_fajr.source"
     curl -fsSL -A "PrayerTime build script (https://github.com/rabaya-bagum/prayertime)" -o "$src" "$url"
     echo "$sha1  $src" | shasum -a 1 -c - >/dev/null
 
     # The source can be a video; keep the audio only, normalized like the others.
-    ffmpeg -v error -y -ss "$start" -i "$src" -vn -ac 1 -af loudnorm=I=-16:TP=-1.5 -ar 44100 "$work/${id}_fajr_full.wav"
+    ffmpeg -v error -y -ss "$start" -t "$(echo "$end - $start" | bc)" -i "$src" -vn -ac 1 -af loudnorm=I=-16:TP=-1.5 -ar 44100 "$work/${id}_fajr_full.wav"
     duration=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$work/${id}_fajr_full.wav")
     fade_start=$(echo "$duration - 0.8" | bc)
     ffmpeg -v error -y -i "$work/${id}_fajr_full.wav" -af "afade=t=out:st=$fade_start:d=0.8" "$work/${id}_fajr.wav"
@@ -67,7 +68,8 @@ build azeez \
     27.5
 
 # Aaqib Azeez has no Fajr recording on Commons; this is Besim Azemi at Malmö Mosque.
+# The last adhan line fades out by 234.5 s; the du'a recited from 241 s is left out.
 build_fajr azeez \
     "https://upload.wikimedia.org/wikipedia/commons/b/b1/Eid_al-Fitr_Fajr_azan_at_Malm%C3%B6_Mosque_-_19_August_2012.webm" \
     bc75d5cee271efb67f03d3f35474a9362fce103f \
-    11.5
+    11.5 235.0
