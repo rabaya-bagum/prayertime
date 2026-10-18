@@ -28,9 +28,10 @@ From each source: downmixed to mono and loudness-normalized (−16 LUFS), then
 - `<id>_clip.caf` / `<id>_clip.m4a`: the opening takbir only (first 27.5 s for
   `azeez`), with a 0.8 s fade-out. iOS notification sounds must be under 30 s.
 - `<id>_adhan.m4a`: the full recording, re-encoded as AAC.
-- `<id>_fajr_adhan.m4a`: the Fajr recording's audio track, from 11.5 s (before
-  that is the room before the first takbir), with a 0.8 s fade-out. The
-  source ends as the last syllable fades, so a little reverb is lost.
+- `<id>_fajr_adhan.m4a`: the Fajr recording's audio track from 11.5 s to
+  235 s, with a 0.8 s fade-out. Before 11.5 s is the room before the first
+  takbir; from 241 s the muezzin recites a du'a after the adhan, which is left
+  out. The adhan's last line fades out by 234.5 s.
 
 These are adaptations, so under CC BY-SA they're shared under CC BY-SA 4.0
 too. That covers the audio files only. The app's code stays MIT; bundling
