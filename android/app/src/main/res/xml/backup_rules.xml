@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings and the chosen city may be backed up by the user's own device backup; nothing else is stored. -->
+<full-backup-content>
+    <include domain="sharedpref" path="prayertime.xml" />
+</full-backup-content>
