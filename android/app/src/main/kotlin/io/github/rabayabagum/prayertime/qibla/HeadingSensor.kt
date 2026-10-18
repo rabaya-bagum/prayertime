@@ -8,6 +8,7 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.view.Surface
 import android.view.WindowManager
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,7 +29,8 @@ class HeadingSensor(private val context: Context) : SensorEventListener {
     private val accelerometer: Sensor? = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     private val magnetometer: Sensor? = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
 
-    val isAvailable: Boolean = magnetometer != null && (rotationVector != null || accelerometer != null)
+    val isAvailable: Boolean = !testNoCompass &&
+        (testHeading != null || magnetometer != null && (rotationVector != null || accelerometer != null))
 
     /** Degrees clockwise from magnetic north, or null before the first reading. */
     var magneticHeading by mutableStateOf<Double?>(null)
@@ -48,6 +50,11 @@ class HeadingSensor(private val context: Context) : SensorEventListener {
     private var smoothY = 0.0
 
     fun start() {
+        testHeading?.let {
+            magneticHeading = it
+            quality = HeadingQuality.GOOD
+            return
+        }
         if (!isAvailable) return
         val primary = rotationVector ?: accelerometer
         manager.registerListener(this, primary, SensorManager.SENSOR_DELAY_UI)
@@ -113,8 +120,16 @@ class HeadingSensor(private val context: Context) : SensorEventListener {
         }
     }
 
-    private companion object {
+    companion object {
         /** Low-pass weight per reading at SENSOR_DELAY_UI (~60 ms): steady, but follows a turn within half a second. */
-        const val SMOOTHING = 0.25
+        private const val SMOOTHING = 0.25
+
+        /** UI tests can't turn an emulator, so they pin the magnetic heading (as iOS's QIBLA_TEST_HEADING). */
+        @VisibleForTesting
+        var testHeading: Double? = null
+
+        /** UI tests use this to stand in for a phone without a compass; emulators have one. */
+        @VisibleForTesting
+        var testNoCompass = false
     }
 }

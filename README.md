@@ -22,7 +22,7 @@ widgets.
 | `docs/AUDIO_LICENSES.md` | Source, author and license of each bundled adhan recording |
 | `android/core` | Kotlin calculation core and alert planners (plain JVM, no Android dependencies) |
 | `android/notifications` | Android alarms, receivers, channels and the adhan playback service |
-| `android/app` | Jetpack Compose app (Android 8+), unit tests in `android/app/src/test` |
+| `android/app` | Jetpack Compose app (Android 8+), unit tests in `android/app/src/test`, on-device UI tests in `android/app/src/androidTest` |
 | `ios/PrayerCore` | Swift package: `PrayerCore` (same API as the Kotlin core) and `PrayerNotifications` |
 | `ios/PrayerTime.xcodeproj` | SwiftUI app (iOS 17+), sources in `ios/PrayerTime`, widgets in `ios/PrayerTimeWidgets`, tests in `ios/PrayerTimeTests` and `ios/PrayerTimeUITests` |
 | `shared/testdata` | Fixtures both cores must pass |
@@ -139,6 +139,18 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
 CI uploads the debug APK as the `android-debug` artifact on every run.
+
+The UI tests drive the app on a running emulator or connected device, as the
+iOS UI tests do on a simulator. They need JDK 21 or newer:
+
+```sh
+cd android && ./gradlew :app:connectedDebugAndroidTest
+```
+
+They run under the test orchestrator, which clears app data before each test.
+A mock location provider stands in for GPS, and `HeadingSensor.testHeading`
+and `testNoCompass` stand in for the compass, which an emulator can't turn.
+CI runs them on an API 35 emulator.
 
 How it differs from iOS:
 
