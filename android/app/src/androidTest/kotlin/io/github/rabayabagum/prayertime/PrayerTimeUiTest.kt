@@ -82,6 +82,7 @@ class PrayerTimeUiTest {
         compose.onNodeWithText("ISNA (North America)").performClick()
         compose.waitForText("Use defaults for Troms, Norway")
 
+        list().performScrollToNode(hasText("Use defaults for Troms, Norway"))
         compose.onNodeWithText("Use defaults for Troms, Norway").performClick()
         compose.waitForText("Muslim World League")
     }
@@ -159,10 +160,12 @@ class PrayerTimeUiTest {
         compose.onNodeWithContentDescription("Qibla compass").fetchSemanticsNode()
             .config.getOrNull(SemanticsProperties.StateDescription).orEmpty()
 
-    /** A Today row's merged text, e.g. "Dhuhr 12:29 PM". */
-    private fun rowText(prayer: String): String =
-        compose.onAllNodes(hasText(prayer)).onFirst().fetchSemanticsNode()
+    /** A Today row's merged text, e.g. "Dhuhr 12:29 PM". Lists only compose rows on screen, so scroll first. */
+    private fun rowText(prayer: String): String {
+        list().performScrollToNode(hasText(prayer))
+        return compose.onAllNodes(hasText(prayer)).onFirst().fetchSemanticsNode()
             .config.getOrNull(SemanticsProperties.Text).orEmpty().joinToString(" ")
+    }
 
     private fun list(): SemanticsNodeInteraction = compose.onNode(hasScrollAction())
 
